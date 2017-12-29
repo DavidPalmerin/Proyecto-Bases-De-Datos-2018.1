@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<architect-project version="1.0" appversion="1.0.8">
+ <project-name>Modelo-Relacional</project-name>
+ <print-settings numCopies="1" zoom="1.0" pageNumbersPrinted="true" orientation="1" paperWidth="612.0" paperHeight="792.0" leftBorder="50.0" rightBorder="50.0" topBorder="50.0" bottomBorder="50.0" />
+ <project-data-sources>
+  <data-source id="DS0">
+   <property key="Logical" value="PlayPen Database" />
+  </data-source>
+ </project-data-sources>
+ <source-databases>
+ </source-databases>
+ <target-database id="ppdb" dbcs-ref="DS0">
+  <table id="TAB1" populated="true" UUID="21a55400-6aef-4215-866e-bec92ff5351d" name="ALIMENTOS" objectType="TABLE" physicalName="ALIMENTOS" >
+   <remarks></remarks>
+   <folder id="FOLTAB11" populated="true" name="Columns" physicalName="Columns" type="1">
+    <column id="COL2" populated="true" UUID="e8953dc3-275c-45cf-ae30-7a17dba22d33" autoIncrement="false" autoIncrementSequenceName="ALIMENTOS_ID_ALIMENTO_seq" defaultValue="" name="ID_ALIMENTO" nullable="0" physicalName="ID_ALIMENTO" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+     <remarks></remarks>
+    </column>
+    <column id="COL3" populated="true" UUID="dd851329-a86a-4ca6-84ed-4980ee9ba85c" autoIncrement="false" autoIncrementSequenceName="ALIMENTOS_NOMBRE_seq" defaultValue="" name="NOMBRE" nullable="1" physicalName="NOMBRE" precision="150" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+     <remarks></remarks>
+    </column>
+    <column id="COL4" populated="true" UUID="344d1e1b-3c9b-41ba-8321-aef88ada1709" autoIncrement="false" autoIncrementSequenceName="ALIMENTOS_TIPO_DE_ALIMENTO_seq" defaultValue="" name="TIPO_DE_ALIMENTO" nullable="0" physicalName="TIPO_DE_ALIMENTO" precision="0" referenceCount="2" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+     <remarks></remarks>
+    </column>
+    </folder>
+    <folder id="FOLTAB13" populated="true" name="Exported Keys" physicalName="Exported Keys" type="3">
+    </folder>
+    <folder id="FOLTAB12" populated="true" name="Imported Keys" physicalName="Imported Keys" type="2">
+    </folder>
+    <folder id="FOLTAB14" populated="true" name="Indices" physicalName="Indices" type="4">
+    <index id="IDX5" populated="true" UUID="febdb428-cefd-46d0-a1d9-f884e84a9bdb" clustered="false" name="ID_ALIMENTO" physicalName="ID_ALIMENTO" primaryKeyIndex="true" unique="false" >
+     <index-column id="IDC6" populated="true" UUID="52cfb7e1-c78b-49a2-bf5c-e86a90547322" ascendingOrDescending="UNSPECIFIED" column-ref="COL2" name="ID_ALIMENTO" physicalName="ID_ALIMENTO" />
+    </index>
+   </folder>
+  </table>
+  <table id="TAB7" populated="true" UUID="7ca7a964-0fb9-4807-a937-6df36622abbf" name="TIPOS_DE_ALIMENTOS" objectType="TABLE" physicalName="TIPOS_DE_ALIMENTOS" >
+   <remarks></remarks>
+   <folder id="FOLTAB71" populated="true" name="Columns" physicalName="Columns" type="1">
+    <column id="COL8" populated="true" UUID="585f7686-74f5-43ec-b54a-4b38878245fe" autoIncrement="false" autoIncrementSequenceName="TIPOS_DE_ALIMENTOS_TIPO_seq" defaultValue="" name="TIPO_DE_ALIMENTO" nullable="0" physicalName="TIPO_DE_ALIMENTO" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+     <remarks></remarks>
+    </column>
+    <column id="COL9" populated="true" UUID="d8ec1c1b-968a-4594-ad5e-079af5846945" autoIncrement="false" autoIncrementSequenceName="TIPOS_DE_ALIMENTOS_NOMBRE_seq" defaultValue="" name="NOMBRE" nullable="0" physicalName="NOMBRE" precision="150" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+     <remarks></remarks>
+    </column>
+    </folder>
+    <folder id="FOLTAB73" populated="true" name="Exported Keys" physicalName="Exported Keys" type="3">
+    </folder>
+    <folder id="FOLTAB72" populated="true" name="Imported Keys" physicalName="Imported Keys" type="2">
+    </folder>
+    <folder id="FOLTAB74" populated="true" name="Indices" physicalName="Indices" type="4">
+    <index id="IDX10" populated="true" UUID="86b18904-dfb1-4248-8373-8e012f7b7bf5" clustered="false" name="TIPOS_DE_ALIMENTOS" physicalName="TIPOS_DE_ALIMENTOS" primaryKeyIndex="true" unique="false" >
+     <index-column id="IDC11" populated="true" UUID="f5e6262e-7931-480a-be1f-401202cf6b22" ascendingOrDescending="UNSPECIFIED" column-ref="COL8" name="TIPO_DE_ALIMENTO" physicalName="TIPO_DE_ALIMENTO" />
+    </index>
+   </folder>
+  </table>
+  <table id="TAB12" populated="true" UUID="8a833dc4-fb28-4af5-9ec9-528578c84ccd" name="ASIGNAR_PRECIO_ALIMENTO" objectType="TABLE" physicalName="ASIGNAR_PRECIO_ALIMENTO" >
+   <remarks></remarks>
+   <folder id="FOLTAB121" populated="true" name="Columns" physicalName="Columns" type="1">
+    <column id="COL13" populated="true" UUID="f8f96d03-8391-4dc0-bfeb-7ea8bf79820e" autoIncrement="false" autoIncrementSequenceName="ASIGNAR_PRECIO_ALIMENTO_FECHA_DE_PRECIO_seq" defaultValue="" name="FECHA_DE_PRECIO" nullable="0" physicalName="FECHA_DE_PRECIO" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="91" userDefinedTypeUUID="ee349be3-6af2-46e1-b305-975f5354b009" >
+     <remarks></remarks>
+    </column>
+    </folder>
+    <folder id="FOLTAB123" populated="true" name="Exported Keys" physicalName="Exported Keys" type="3">
+    </folder>
+    <folder id="FOLTAB122" populated="true" name="Imported Keys" physicalName="Imported Keys" type="2">
+    </folder>
+    <folder id="FOLTAB124" populated="true" name="Indices" physicalName="Indices" type="4">
+    <index id="IDX14" populated="true" UUID="2c3b2455-8dda-4c38-b037-9968f8ef82b4" clustered="false" name="ASIGNAR_PRECIO_ALIMENTO_pk" physicalName="ASIGNAR_PRECIO_ALIMENTO_pk" primaryKeyIndex="true" unique="false" >
+    </index>
+   </folder>
+  </table>
+  <table id="TAB15" populated="true" UUID="1fe9ab86-bc22-44b3-8962-bab487f931da" name="PRECIOS_DE_SALSAS" objectType="TABLE" physicalName="PRECIOS_DE_SALSAS" >
+   <remarks></remarks>
+   <folder id="FOLTAB151" populated="true" name="Columns" physicalName="Columns" type="1">
+    <column id="COL16" populated="true" UUID="8268e09a-9c1d-48c5-8501-afc673aeb534" autoIncrement="false" autoIncrementSequenceName="PRECIOS_DE_SALSAS_PRECIO_ML_seq" defaultValue="" name="PRECIO_ML" nullable="0" physicalName="PRECIO_ML" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="6" userDefinedTypeUUID="7e55bcd0-7606-4153-b749-9c397f12c4d8" >
+     <remarks></remarks>
+    </column>
+    <column id="COL17" populated="true" UUID="c509ffad-f622-4a45-af43-00e1bc12ad35" autoIncrement="false" autoIncrementSequenceName="PRECIOS_DE_SALSAS_PRECIO_LITRO_seq" defaultValue="" name="PRECIO_LITRO" nullable="0" physicalName="PRECIO_LITRO" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="6" userDefinedTypeUUID="7e55bcd0-7606-4153-b749-9c397f12c4d8" >
+     <remarks></remarks>
+    </column>
+    <column id="COL18" populated="true" UUID="78900850-af9d-4598-8203-61979ec1926b" autoIncrement="false" autoIncrementSequenceName="PRECIOS_DE_SALSAS_PRECIO_MEDIO_KG_seq" defaultValue="" name="PRECIO_MEDIO_KG" nullable="0" physicalName="PRECIO_MEDIO_KG" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="6" userDefinedTypeUUID="7e55bcd0-7606-4153-b749-9c397f12c4d8" >
+     <remarks></remarks>
+    </column>
+    </folder>
+    <folder id="FOLTAB153" populated="true" name="Exported Keys" physicalName="Exported Keys" type="3">
+    </folder>
+    <folder id="FOLTAB152" populated="true" name="Imported Keys" physicalName="Imported Keys" type="2">
+    </folder>
+    <folder id="FOLTAB154" populated="true" name="Indices" physicalName="Indices" type="4">
+    <index id="IDX19" populated="true" UUID="3f92b761-24dc-4c58-9092-ea7b5e92657c" clustered="false" name="PRECIOS_DE_SALSAS_pk" physicalName="PRECIOS_DE_SALSAS_pk" primaryKeyIndex="true" unique="false" >
+    </index>
+   </folder>
+  </table>
+  <table id="TAB20" populated="true" UUID="d56540ca-3aec-45f6-a257-b6b15d41f61e" name="PRECIOS_DE_MENU" objectType="TABLE" physicalName="PRECIOS_DE_MENU" >
+   <remarks></remarks>
+   <folder id="FOLTAB201" populated="true" name="Columns" physicalName="Columns" type="1">
+    <column id="COL21" populated="true" UUID="9d49dc24-acaf-4cd4-8649-43d601a59a4f" autoIncrement="false" autoIncrementSequenceName="PRECIOS_DE_MENU_PRECIO_seq" defaultValue="" name="PRECIO" nullable="0" physicalName="PRECIO" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="6" userDefinedTypeUUID="7e55bcd0-7606-4153-b749-9c397f12c4d8" >
+     <remarks></remarks>
+    </column>
+    </folder>
+    <folder id="FOLTAB203" populated="true" name="Exported Keys" physicalName="Exported Keys" type="3">
+    </folder>
+    <folder id="FOLTAB202" populated="true" name="Imported Keys" physicalName="Imported Keys" type="2">
+    </folder>
+    <folder id="FOLTAB204" populated="true" name="Indices" physicalName="Indices" type="4">
+    <index id="IDX22" populated="true" UUID="058cb7df-5dbd-4566-9182-52118d5a8779" clustered="false" name="PRECIOS_DE_MENU_pk" physicalName="PRECIOS_DE_MENU_pk" primaryKeyIndex="true" unique="false" >
+    </index>
+   </folder>
+  </table>
+  <relationships>
+   <relationship id="REL23" populated="true" UUID="239353e2-c075-40ab-bbff-47055135b20c" deferrability="7" deleteRule="3" fk-table-ref="TAB1" fkCardinality="7" identifying="false" name="TIPOS_DE_ALIMENTOS_ALIMENTOS_fk" physicalName="TIPOS_DE_ALIMENTOS_ALIMENTOS_fk" pk-table-ref="TAB7" pkCardinality="2" updateRule="3" >
+    <column-mapping id="CMP24" populated="true" UUID="dbee5cd1-9e51-444a-835f-cf28ed364ec1" fk-column-ref="COL4" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL8" />
+   </relationship>
+  </relationships>
+ </target-database>
+ <ddl-generator type="ca.sqlpower.architect.ddl.GenericDDLGenerator" allow-connection="true"> </ddl-generator>
+ <liquibase-settings useSeparateChangeSets="false" generateId="false" idStart="1"/>
+ <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
+ <play-pen zoom="0.6779998721611059" viewportX="0" viewportY="0" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
+  <table-pane table-ref="TAB1" x="476" y="296" bgColor="0xeec994" fgColor="0x000000" rounded="false" dashed="false"/>
+  <table-pane table-ref="TAB7" x="53" y="365" bgColor="0xeec994" fgColor="0x000000" rounded="false" dashed="false"/>
+  <table-pane table-ref="TAB12" x="1067" y="325" bgColor="0xf6bcbc" fgColor="0x000000" rounded="false" dashed="false"/>
+  <table-pane table-ref="TAB15" x="741" y="752" bgColor="0xc8b7ea" fgColor="0x000000" rounded="false" dashed="false"/>
+  <table-pane table-ref="TAB20" x="744" y="631" bgColor="0xc8b7ea" fgColor="0x000000" rounded="false" dashed="false"/>
+  <table-link relationship-ref="REL23" pkConnection="0.13333333333333333" fkConnection="0.8315789473684211" rLineColor="0x4d4d4d" pkLabelText="" fkLabelText="" orientation="33"/>
+ </play-pen>
+ <critic-manager>
+  <critic-grouping platformType="Generic" enabled="true">
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.PrimaryKeyCritic" severity="ERROR"/>
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.RelationshipMappingTypeCritic" severity="ERROR"/>
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.EmptyRelationshipCritic" severity="ERROR"/>
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.AlphaNumericNameCritic" severity="ERROR"/>
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.AlphaNumericSequenceNameCritic" severity="ERROR"/>
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.SetDefaultOnColumnWithNoDefaultCritic" severity="ERROR"/>
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.SetNullOnNonNullableColumnCritic" severity="ERROR"/>
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.DuplicateNameCritic" severity="ERROR"/>
+  </critic-grouping>
+  <critic-grouping platformType="DB2" enabled="true">
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.DB2UnsupportedFeaturesCritic" severity="ERROR"/>
+  </critic-grouping>
+  <critic-grouping platformType="H2" enabled="true">
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.H2UnsupportedFeaturesCritic" severity="ERROR"/>
+  </critic-grouping>
+  <critic-grouping platformType="HSQLDB" enabled="true">
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.HSQLDBUnsupportedFeaturesCritic" severity="ERROR"/>
+  </critic-grouping>
+  <critic-grouping platformType="MySQL" enabled="true">
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.MySQLCommentCritic" severity="ERROR"/>
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.MySQLReservedWordsCritic" severity="ERROR"/>
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.MySQLUnsupportedFeaturesCritic" severity="ERROR"/>
+  </critic-grouping>
+  <critic-grouping platformType="Oracle" enabled="true">
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.OraclePhysicalNameCritic" severity="ERROR"/>
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.OracleReservedWordsCritic" severity="ERROR"/>
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.OracleUnsupportedFeaturesCritic" severity="ERROR"/>
+  </critic-grouping>
+  <critic-grouping platformType="PostgreSQL" enabled="true">
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.PostgreSQLReservedWordsCritic" severity="ERROR"/>
+  </critic-grouping>
+  <critic-grouping platformType="SQL Server" enabled="true">
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.SQLServerUnsupportedFeaturesCritic" severity="ERROR"/>
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.SQLServerReservedWordsCritic" severity="ERROR"/>
+  </critic-grouping>
+  <critic-grouping platformType="SQL Server 2000" enabled="true">
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.SQLServer2000UnsupportedFeaturesCritic" severity="ERROR"/>
+  </critic-grouping>
+  <critic-grouping platformType="SQL Server 2005" enabled="true">
+   <critic-settings class="ca.sqlpower.architect.ddl.critic.impl.SQLServer2005UnsupportedFeaturesCritic" severity="ERROR"/>
+  </critic-grouping>
+ </critic-manager>
+ <profiles topNCount="10">
+  </profiles>
+  <olap>
+  </olap>
+  <olap-gui>
+  </olap-gui>
+</architect-project>
