@@ -1,12 +1,9 @@
 CREATE TABLE Persona(
-    email VARCHAR2(25),
-    apellido_paterno VARCHAR2(15),
-    apellido_materno VARCHAR2(15),
-    nombres VARCHAR2(20),
-    -- ???????????????????????????????????????????????????????????????????????????????????????
-    telefono VARCHAR2(13), -- Debería ser Int o Long, no?
-    # no creo, en primera long tiene maximo 10 caracteres positivos, si te ponen un telefono con lada valio madres
-    # y ademas un telefono no necesita ser operado como numero, basta con tenerlo como cadena
+    email VARCHAR2(25) NOT NULL,
+    apellido_paterno VARCHAR2(15) NOT NULL,
+    apellido_materno VARCHAR2(15) NOT NULL,
+    nombres VARCHAR2(20) NOT NULL,
+    telefono VARCHAR2(13) NOT NULL,
     id_direccion INTEGER
 );
 
@@ -14,37 +11,24 @@ ALTER TABLE Persona ADD CONSTRAINT PK_Persona PRIMARY KEY (email);
 
 CREATE TABLE Cliente(
     email VARCHAR2(25),
-    -- ???????????????????????????????????????????????????????????????????????????????????????
-    num_tarjeta INTEGER, -- Se podría poner una relación aparte por si un cliente tiene muchas cuentas registradas (como abajo). 
-    # no estoy seguro si sea necesaria esa funcionalidad, para que querria un cliente tener mas de una cuenta en un restaurante de tacos? XD
-    puntos_acumulados INTEGER
+    num_tarjeta INTEGER, 
+    puntos_acumulados INTEGER NOT NULL
 );
 
 ALTER TABLE Cliente ADD CONSTRAINT FK_Cliente_email FOREIGN KEY (email) REFERENCES Persona (email);
 ALTER TABLE Cliente ADD CONSTRAINT PK_Cliente PRIMARY KEY (num_tarjeta);
 
--- ???????????????????????????????????????????????????????????????????????????????????????
--- CREATE TABLE Tarjetas( 
---     num_tarjeta INTEGER,
---     email VARCHAR2(25)
--- );
-
--- ALTER TABLE Tarjetas ADD CONSTRAINT PK_Tarjetas (num_tarjeta) PRIMARY KEY (num_tarjeta);
--- ALTER TABLE Tarjetas ADD CONSTRAINT FK_Tarjetas_email (email) REFERENCES Cliente (email)
--- Y se eliminaría el último alter table de Cliente. 
--- ???????????????????????????????????????????????????????????????????????????????????????
-
-
 CREATE TABLE Empleado(
     email VARCHAR2(25),
-    fecha_nacimiento DATE,
-    RFC VARCHAR2(13),
-    CURP VARCHAR2(18),
-    num_seg_social VARCHAR2(11),
-    tipo_sangre VARCHAR2(2),
-    tipo_empleado VARCHAR2(10),
-    # edad INTEGER -- Creo que no se define como tal esta columna pues se calcula directamente en los queries.
-    # de acuerdo
+    fecha_nacimiento DATE NOT NULL,
+    RFC VARCHAR2(13) NOT NULL,
+    CURP VARCHAR2(18) NOT NULL,
+    num_seg_social VARCHAR2(11) NOT NULL,
+    tipo_sangre VARCHAR2(2) NOT NULL,
+    tipo_empleado VARCHAR2(10) NOT NULL
+    -- Tal vez estaria bien hacer una tabla de los tipos de empleados y poner una FK al tipo, para evitar almacenar muchas veces los tipos de empleados.
+    -- Y tambien sería una forma mas facil de ver que tipos de empleados existen, sería mas eficiente que recorrer todos los empleados buscando
+    -- los tipos que son distintos.
 );
 
 ALTER TABLE Empleado ADD CONSTRAINT PK_Empleado PRIMARY KEY (RFC);
@@ -52,37 +36,37 @@ ALTER TABLE Empleado ADD CONSTRAINT FK_Empleado_email FOREIGN KEY (email) REFERE
 
 CREATE TABLE Repartidor(
     RFC VARCHAR2(13),
-    num_licencia VARCHAR2(15),
+    num_licencia VARCHAR2(15) NOT NULL,
     placa VARCHAR2(6),
-    tipo_transporte VARCHAR(10),
-    vehiculo_propio BOOLEAN
+    tipo_transporte VARCHAR(10) NOT NULL, 
+    -- Igual que el comentario anterior, hacer una tabla de tipos de transporte, y tiene la misma ventaja.
+    vehiculo_propio BOOLEAN NOT NULL
 );
 
 ALTER TABLE Repartidor ADD CONSTRAINT FK_Repartidor_RFC FOREIGN KEY (RFC) REFERENCES Empleado (RFC);
--- ALTER TABLE Repartidor ADD CONSTRAINT PK_Repartidor PRIMARY KEY (RFC); 
+ALTER TABLE Repartidor ADD CONSTRAINT PK_Repartidor PRIMARY KEY (RFC); 
 
 CREATE TABLE Reparto(
     RFC_Repartidor VARCHAR2(13),
-    hora_salida DATETIME,
-    entregado BOOLEAN,
     id_orden INTEGER
+    hora_salida DATETIME NOT NULL,
+    entregado BOOLEAN NOT NULL,
 );
 
 ALTER TABLE Reparto ADD CONSTRAINT FK_Reparto_RFC FOREIGN KEY (RFC_Repartidor) REFERENCES Repartidor (RFC);
-# falta constraint FK de id_orden
 
 CREATE TABLE Sucursal(  
     id_sucursal INTEGER,
     nombre VARCHAR2(20),
-    horarios VARCHAR2(50), -- En lugar de esto se define una nueva tabla de horarios para sucursales (abajo). # de acuerdo x2
+    horarios VARCHAR2(50), 
     id_direccion INTEGER,
     restricciones_alimentos VARCHAR2(30) -- Se tiene que definir una nueva tabla, la hice abajo de Alimento (abajo).
     # no entendi bien esto de las restricciones, para que va a servir?
+    -- Hay alimentos que solo se sirven en ciertas sucursales, entonces hay que registrar esos alimentos que no se sirven en x sucursal.
 );
 
 ALTER TABLE Sucursal ADD CONSTRAINT PK_Sucursal PRIMARY KEY (id_sucursal);
 
--- ????????????????????????????????????????????????????????????????????????????????????????
 CREATE TABLE Dias(
     id_dia INTEGER,
     nombre_dia VARCHAR2(25)
@@ -94,8 +78,7 @@ CREATE TABLE Horarios_Sucursales(
     id_sucursal INTEGER,
     id_dia INTEGER,
     hora_inicio TIMESTAMP,
-    hora_fin TIMESTAMP  -- Creo que poner la hora fin aqui no cumple 3NF pues depende de la hora de inicio.
-    # eeeh no se, en cierto sentido pero yo creo son bastante independientes, no hay pex 
+    hora_fin TIMESTAMP  
 );
 
 ALTER TABLE Horarios_Sucursales ADD CONSTRAINT FK_Horarios_Sucursales_id_sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id_sucursal);
@@ -129,7 +112,7 @@ CREATE TABLE Ingrediente(
     caducidad DATE
 );
 
-ALTER TABLE Ingrediente ADD CONSTRAINT FK_Ingrediente_ID FOREIGN KEY (id_ingrediente) REFERENCES Producto (id_ingrediente);
+ALTER TABLE Ingrediente ADD CONSTRAINT FK_Ingrediente_ID FOREIGN KEY (id_ingrediente) REFERENCES Producto (id_producto);
 ALTER TABLE Ingrediente ADD CONSTRAINT PK_Ingrediente PRIMARY KEY (id_ingrediente);
 
 CREATE TABLE Proveedor(
@@ -149,14 +132,13 @@ CREATE TABLE Suministro(
     fecha_compra DATETIME,
     pago FLOAT,
     id_producto INTEGER,
-    -- Cntidad que hay del producto? # seh
     cantidad_comprada FLOAT
 );
--- Hacen falta PK. # whoops
+
 ALTER TABLE Suministro ADD CONSTRAINT PK_Suministro PRIMARY KEY (id_compra);
-ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id);
-ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Proveedor FOREIGN KEY (id_proveedor) REFERENCES Proveedor (id);
-ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Producto FOREIGN KEY (id_producto) REFERENCES Producto (id);
+ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id_sucursal);
+ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Proveedor FOREIGN KEY (id_proveedor) REFERENCES Proveedor (id_proveedor);
+ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Producto FOREIGN KEY (id_producto) REFERENCES Producto (id_producto);
 
 CREATE TABLE Direccion(
     id_direccion INTEGER,
@@ -176,8 +158,6 @@ CREATE TABLE Alimento(
     id_alimento INTEGER,
     nombre VARCHAR2(25),
     descripcion VARCHAR2(50),
-    #precio_actual FLOAT -- No estoy seguro si este va como columna directamente pues es calculable con fecha actual e historia_precios.
-    # mejor aun, auto rellenarla seria un desmadre
 );
 
 ALTER TABLE Alimento ADD CONSTRAINT PK_Alimento PRIMARY KEY (id_alimento);
@@ -205,8 +185,7 @@ CREATE TABLE Ingrediente_Ocupado(
 
 ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT FK_Ingrediente_Ocupado_id_alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
 ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT FK_Ingrediente_Ocupado_id_ingrediente FOREIGN KEY (id_ingrediente) REFERENCES Ingrediente (id_ingrediente);
--- Falta PK.
--- ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT PK_Ingrediente_Ocupado PRIMARY KEY (id_alimento, id_ingrediente);
+ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT PK_Ingrediente_Ocupado PRIMARY KEY (id_alimento, id_ingrediente);
 
 
 CREATE TABLE Historia_Precios(
@@ -218,24 +197,34 @@ CREATE TABLE Historia_Precios(
 );
 
 ALTER TABLE Historia_Precios ADD CONSTRAINT FK_HP FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
-ALTER TABLE Historia_Precios ADD CONSTRAINT PK_HP PRIMARY KEY (id_alimento); -- Esta PK creo que no jalaría.
--- Si hacemos PK a id_alimento, entonces no podremos hacer un historico de precios. Creo que se tiene que definir un id especial para esta clase (id_precio).
--- ALTER TABLE Historia_Precios ADD CONSTRAINT PK_HP PRIMARY KEY (id_precio);
+ALTER TABLE Historia_Precios ADD CONSTRAINT PK_HP PRIMARY KEY (id_precio);
 -- FK de id_promocion esta en Promocion (abajo).
 ####
 # Ah tienes razon con lo del id. La promocion no se, creo es mejor no juntarlos y guardar los precios como van?
 ####
+------
+-- Simón, se seguiria almacenando el precio normal pero tambien tendría la referencia de la promocion que tiene en ese momento.
+-- Siento que el poner el id_promocion en Orden unicamente dejaría tener un descuento para todos los alimentos comprados, cuando puede pasar
+-- que compraste tacos al 2x1 y tambien una salsa con descuento. Entonces unicamente se capturaria un descuento.
+------
 
 CREATE TABLE Salsa(
     id_alimento INTEGER,
-    picor VARCHAR(15),
-    recomendaciones VARCHAR(50), -- Si es recomendacion basta con una fk a un Alimento, si son recomendaciones hay que hacer una nueva clase Recomendaciones.
-    # son recomendaciones, habria que hacer esa tabla auxiliar
-    # aunque tambien funca asi
+    picor VARCHAR(15),  -- Igual que con el comentario de tipos de vehiculos. #####################################################
 );
 
 ALTER TABLE Salsa ADD CONSTRAINT FK_Salsa_ID FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
 ALTER TABLE Salsa ADD CONSTRAINT PK_Salsa_ID PRIMARY KEY (id_alimento);
+
+CREATE TABLE Recomendaciones_Salsas(
+    id_alimento INTEGER,
+    id_recomendacion INTEGER NOT NULL
+);
+
+ALTER TABLE Recomendaciones_Salsas ADD CONSTRAINT PK_RS PRIMARY KEY (id_alimento, id_recomendacion);
+ALTER TABLE Recomendaciones_Salsas ADD CONSTRAINT FK_RS_Alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
+ALTER TABLE Recomendaciones_Salsas ADD CONSTRAINT FK_RS_Recomendacion FOREIGN KEY (id_recomendacion) REFERENCES Alimento (id_alimento);
+######### Buscar la forma de que recomendacion no sea otra salsa (En SQL). ############.
 
 CREATE TABLE Historia_Precios_Salsas(
     id_precio INTEGER,
@@ -246,9 +235,7 @@ CREATE TABLE Historia_Precios_Salsas(
     precio_lt FLOAT
 );
 
--- Igual que en Historia_Prcios, necesitamos un nuevo id, si no solo podremos guardar un precio para cada alimento.
--- ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT PK_HPS PRIMARY KEY (id_precio); Y se elimna la primera de abajo
-ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT PK_HPS PRIMARY KEY (id_alimento);
+ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT PK_HPS PRIMARY KEY (id_precio); 
 ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT FK_HPS_id_alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
 
 CREATE TABLE Promocion(
@@ -257,6 +244,8 @@ CREATE TABLE Promocion(
     #cantidad_alimentos INTEGER, -- Numero de alimentos para que la promocion sea valida. (Como tacos 2x1).
     # yo creo es mejor tener una descripcion de texto con los terminos y condiciones de la promocion, y que los cajeros se encarguen de aplicarla
     # porque por ejemplo con esta construccion que propones solo son validas las promociones que son descuentos, que tal que es una mamada como "un refresco gratis en la compra de 4 tacos"
+    
+    -- Ah simon, con eso no jala, el pedo es que si se deja como descripcion, en las compras por internet no hay quien este checando que se hagan validas las promociones.
     descripcion VARCHAR2(100),
     inicio_vigencia DATE,
     fin_vigencia DATE
@@ -264,9 +253,6 @@ CREATE TABLE Promocion(
 
 ALTER TABLE Promocion ADD CONSTRAINT PK_Promocion PRIMARY KEY (id_promocion);
 
--- ?????????????????????????????????????????????????????????????????????????
--- Segun yo es necesario pues hay promociones que son en dias especificos como tacos 2x1 unicamente los viernes. Tal vez las horas no son tan necesarias.
-## Simon esto es buena idea
 CREATE TABLE Horarios_Promociones(
      id_promocion INTEGER,
      id_dia INTEGER,
@@ -277,7 +263,6 @@ CREATE TABLE Horarios_Promociones(
 ALTER TABLE Horarios_Promociones ADD CONSTRAINT PK_Horarios_Promociones PRIMARY KEY (id_promocion, id_dia);
 ALTER TABLE Horarios_Promociones ADD CONSTRAINT FK_Horarios_Promociones FOREIGN KEY (id_promocion) REFERENCES Promocion (id_promocion);
 ALTER TABLE Horarios_Promociones ADD CONSTRAINT FK_Horarios_Promociones FOREIGN KEY (id_dia) REFERENCES Dias (id_dia);
--- ???????????????????????????????????????????????????????????????????
 
 CREATE TABLE Orden(
     id INTEGER,
@@ -287,11 +272,38 @@ CREATE TABLE Orden(
     RFC_atendio VARCHAR2(13),
     id_sucursal INTEGER,
     tipo_pago VARCHAR2(15),
-    puntos_generados FLOAT
+    puntos_generados FLOAT -- Es columna calculable?.
 );
 
+-- ????????????????????????????????????????????????????????????????????????????????????
+-- Creo que sría bueno diferenciar las ordenes por Sucursal y por internet (Reparto) y los pagos.
+--CREATE TABLE Orden (
+--     id INTEGER,
+--     id_sucusal INTEGER,
+--     num_tarjeta_cliente VARCHAR2(25),
+--     fecha DATE
+-- );
 
 ALTER TABLE Orden ADD CONSTRAINT PK_Orden PRIMARY KEY (id);
+
+-- CREATE TABLE En_Sucursal (
+--     id_orden INTEGER,
+--     RFC_atendio VARCHAR(13),
+--     mesa INTEGER                     # En el pdf pide dar recibos por cliente y por mesa.
+-- );
+
+-- ALTER TABLE En_Sucursal ADD CONSTRAINT PK_ES PRIMARY KEY (id_orden);
+-- ALTER TABLE En_Sucursal ADD CONSTRAINT FK_ES_Orden FOREIGN KEY (id_orden) REFERENCES Orden (id);
+-- ALTER TABLE En_Sucursal ADD CONSTRAINT FK_ES_RFC FOREIGN KEY (RFC_atendio) REFERENCES Empleado (RFC);
+
+-- CREATE TABLE Pagos (
+--     id_orden INTEGER,
+--     RFC_cobrador INTEGER,
+--     hora_pago TIMESTAMP,
+--     tipo_de_pago VARCHAR2(25)
+-- );
+-- ????????????????????????????????????????????????????????????????????????????????????
+
 # es posible agregar ordenes sin tener que ingresar los datos de un cliente (los que comieron en el restaurante que no tengan tarjeta de cliente, por ejemplo)
 # simplemente su fk corresponderá a un cliente abstracto cualquiera, cuyos datos fueron llenados anteriormente
 ALTER TABLE Orden ADD CONSTRAINT FK_Orden_Cliente FOREIGN KEY (num_tarjeta) REFERENCES Cliente (num_tarjeta);
@@ -300,12 +312,23 @@ ALTER TABLE Orden ADD CONSTRAINT FK_Orden_Promocion FOREIGN KEY (id_promocion) R
 ALTER TABLE Orden ADD CONSTRAINT FK_Orden_Atendio FOREIGN KEY (RFC_atendio) REFERENCES Empleado (RFC);
 ALTER TABLE ORDEN ADD CONSTRAINT FK_Orden_Sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id_sucursal);
 # falta el trigger que incremente la cantidad de puntos acumulados en la cuenta con numero de tarjeta del cliente
+ALTER TABLE Reparto ADD CONSTRAINT FK_Reparto_Orden FOREIGN KEY (id_orden) REFERENCES Orden (id);
 
 # Auxiliar a Orden
 # Una orden corresponde a uno o múltiples pedidos (por ejemplo, 4 tacos al pastor + 2 aguas + medio litro de salsa)
 CREATE TABLE Pedido(
+    id_pedido INTEGER,
     id_orden INTEGER,
     id_alimento INTEGER,
     cantidad_alimento FLOAT,
     unidad_alimento VARCHAR(10)
 );
+
+-- Se agregan llaves.
+ALTER TABLE Pedido ADD CONSTRAINT PK_Pedido PRIMARY KEY (id_orden, id_pedido) -- Ayuda que los dos sean llaves para que id_pedido no crezca tan rápido.
+ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_Orden FOREIGN KEY (id_orden) REFERENCES Orden (id);
+ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_Alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
+################################################
+-- Creo que mejor usar VARCHAR para las llaves, si todos son Integer tendemos que definir rangos y en algunos casos no sabemos cuanto es suficiente.
+-- Si usamos VARCHAR a cada clase le asignamos un Prefijo seguido de un entero que puede crecer tanto como quiera. ORD-112, CLT-9023, etc...
+################################################
