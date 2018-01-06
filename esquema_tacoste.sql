@@ -20,16 +20,16 @@ CREATE TABLE Cliente(
 );
 
 ALTER TABLE Cliente ADD CONSTRAINT FK_Cliente_email FOREIGN KEY (email) REFERENCES Persona (email);
-ALTER TABLE Cliente ADD CONSTRAINT PK_Cliente PRIMARY KEY (num_cuenta);
+ALTER TABLE Cliente ADD CONSTRAINT PK_Cliente PRIMARY KEY (email);
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Empleado(
-    email VARCHAR2(25),
-    fecha_nacimiento DATE NOT NULL,
     RFC VARCHAR2(13) NOT NULL,
+    email VARCHAR2(25),
     CURP VARCHAR2(18) NOT NULL,
     num_seg_social VARCHAR2(11) NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
     tipo_sangre VARCHAR2(2) NOT NULL,
     tipo_empleado VARCHAR2(20) NOT NULL
 );
@@ -142,10 +142,10 @@ ALTER TABLE Ingrediente ADD CONSTRAINT FK_Ingrediente_ID FOREIGN KEY (id_ingredi
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Proveedor(
     id_proveedor INTEGER,
+    id_direccion INTEGER,
     nombre VARCHAR2(20) NOT NULL,
     telefono VARCHAR2(13) NOT NULL,
-    email VARCHAR2(25) NOT NULL,
-    id_direccion INTEGER
+    email VARCHAR2(25) NOT NULL
 );
 
 ALTER TABLE Proveedor ADD CONSTRAINT PK_Proveedor PRIMARY KEY (id_proveedor);
@@ -155,9 +155,9 @@ ALTER TABLE Proveedor ADD CONSTRAINT PK_Proveedor PRIMARY KEY (id_proveedor);
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Suministro(
     id_compra INTEGER,
-    id_sucursal INTEGER,
-    id_proveedor INTEGER,
-    id_producto INTEGER,
+    id_sucursal INTEGER NOT NULL,
+    id_proveedor INTEGER NOT NULL,
+    id_producto INTEGER NOT NULL,
     fecha_compra DATE NOT NULL,
     pago NUMBER(*,2) NOT NULL,
     cantidad_comprada INTEGER NOT NULL
@@ -172,11 +172,11 @@ ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Producto FOREIGN KEY (id_pro
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Direccion(
     id_direccion INTEGER,
-    calle VARCHAR2(10) NOT NULL,
+    calle VARCHAR2(20) NOT NULL,
     numero_ext VARCHAR2(10) NOT NULL,
     numero_int VARCHAR2(10),
-    colonia VARCHAR2(10) NOT NULL,
-    ciudad VARCHAR2(15) NOT NULL,
+    colonia VARCHAR2(20) NOT NULL,
+    ciudad VARCHAR2(25) NOT NULL,
     CP VARCHAR2(5) NOT NULL
 );
 ALTER TABLE Direccion ADD CONSTRAINT PK_Direccion PRIMARY KEY (id_direccion);
@@ -201,15 +201,15 @@ ALTER TABLE Alimento ADD CONSTRAINT PK_Alimento PRIMARY KEY (id_alimento);
 ---------------------------------------------------------------------------------------------
 -- Aquí van los alimentos que x sucursal no vende.
 -- Si la sucursal x con el alimento y no estan en esta tabla, entonces la sucursal si vende el alimento.
-CREATE TABLE Reestricciones_Alimentos(  
+CREATE TABLE Restricciones_Alimentos(  
     id_sucursal INTEGER,
     id_alimento INTEGER, 
-    fecha_reestriccion DATE
+    fecha_restriccion DATE
 );
 
-ALTER TABLE Reestricciones_Alimentos ADD CONSTRAINT PK_Reestricciones_Alimentos PRIMARY KEY (id_sucursal, id_alimento);
-ALTER TABLE Reestricciones_Alimentos ADD CONSTRAINT FK_Reestricciones_Alimentos_id_sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id_sucursal);
-ALTER TABLE Reestricciones_Alimentos ADD CONSTRAINT FK_Reestricciones_Alimentos_id_alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
+ALTER TABLE Restricciones_Alimentos ADD CONSTRAINT PK_Restricciones_Alimentos PRIMARY KEY (id_sucursal, id_alimento);
+ALTER TABLE Restricciones_Alimentos ADD CONSTRAINT FK_Restricciones_Alimentos_id_sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id_sucursal);
+ALTER TABLE Restricciones_Alimentos ADD CONSTRAINT FK_Restricciones_Alimentos_id_alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -229,9 +229,9 @@ ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT PK_Ingrediente_Ocupado PRIMARY KE
 CREATE TABLE Historia_Precios(
     id_precio INTEGER, 
     id_alimento INTEGER,
+    id_promocion INTEGER,                
     inicio_vigencia DATE NOT NULL,
-    precio_porcion NUMBER(*,2) NOT NULL,
-    id_promocion INTEGER                
+    precio_porcion NUMBER(*,2) NOT NULL
 );
 
 ALTER TABLE Historia_Precios ADD CONSTRAINT PK_HP PRIMARY KEY (id_precio);
@@ -242,7 +242,7 @@ ALTER TABLE Historia_Precios ADD CONSTRAINT FK_HP FOREIGN KEY (id_alimento) REFE
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Salsa(
     id_alimento INTEGER,
-    picor VARCHAR2(15) NOT NULL
+    picor VARCHAR2(25) NOT NULL
 );
 
 ALTER TABLE Salsa ADD CONSTRAINT PK_Salsa PRIMARY KEY (id_alimento);
@@ -302,8 +302,8 @@ ALTER TABLE Descuentos ADD CONSTRAINT FK_Descuentos_ID FOREIGN KEY (id_promocion
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Paquetes(
     id_promocion INTEGER,
-    cantidad_necesarios INTEGER NOT NULL,     -- Es la cantidad de alimentos que se necesitan comprar para que sea válida la promoción.
     alimento_paquete INTEGER NOT NULL,        -- El alimento que se dará.
+    cantidad_necesarios INTEGER NOT NULL,     -- Es la cantidad de alimentos que se necesitan comprar para que sea válida la promoción.
     cantidad_ap INTEGER NOT NULL              -- Cantidad de alimentos que se darán.
 );
 
@@ -317,8 +317,8 @@ ALTER TABLE Paquetes ADD CONSTRAINT FK_Paquetes_AP FOREIGN KEY (alimento_paquete
 CREATE TABLE Horarios_Promociones(
      id_promocion INTEGER,
      id_dia INTEGER,
-     hora_inicio INTEGER,
-     hora_fin INTEGER
+     hora_inicio TIMESTAMP,
+     hora_fin TIMESTAMP
 );
 
 ALTER TABLE Horarios_Promociones ADD CONSTRAINT PK_Horarios_Promociones PRIMARY KEY (id_promocion, id_dia);
@@ -331,13 +331,13 @@ ALTER TABLE Horarios_Promociones ADD CONSTRAINT FK_Horarios_Promociones_Dia FORE
 CREATE TABLE Orden (
     id INTEGER,
     id_sucursal INTEGER NOT NULL,
-    num_cuenta INTEGER NOT NULL,
+    cliente VARCHAR(25) NOT NULL,
     fecha DATE NOT NULL
 );
 
 ALTER TABLE Orden ADD CONSTRAINT PK_Orden PRIMARY KEY (id);
 ALTER TABLE Orden ADD CONSTRAINT FK_Orden_Sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id_sucursal);
-ALTER TABLE Orden ADD CONSTRAINT FK_Orden_Tarjeta FOREIGN KEY (num_cuenta) REFERENCES Cliente (num_cuenta);
+ALTER TABLE Orden ADD CONSTRAINT FK_Orden_Tarjeta FOREIGN KEY (cliente) REFERENCES Cliente (email);
 
 ALTER TABLE Reparto ADD CONSTRAINT FK_Reparto_Orden FOREIGN KEY (id_orden) REFERENCES Orden (id);
 ---------------------------------------------------------------------------------------------
