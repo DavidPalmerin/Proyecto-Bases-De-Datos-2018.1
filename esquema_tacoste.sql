@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Persona(
-    email VARCHAR2(25) NOT NULL,
+    email VARCHAR2(50) NOT NULL,
     apellido_paterno VARCHAR2(15) NOT NULL,
     apellido_materno VARCHAR2(15) NOT NULL,
     nombres VARCHAR2(20) NOT NULL,
