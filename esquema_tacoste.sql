@@ -1,3 +1,12 @@
+-- IMPORTNTE: Se quitò id_promociòn a Alimento; ùnicamente va en historio de precios normales y de salsas. 
+-- Restricciones agregadas:
+-- Tiestamps de Horarios_Sucrusales
+-- Salario > 0 en Contrato.
+-- Cantidades > 0 en Ingrediente Ocupado.
+-- Cantidad Comprada > 0 en Suministro.
+-- Vigencias en promociones.
+
+-- Que telefono solo tenga numeros.
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Persona(
     email VARCHAR2(50) NOT NULL,
@@ -21,6 +30,7 @@ CREATE TABLE Cliente(
 
 ALTER TABLE Cliente ADD CONSTRAINT FK_Cliente_email FOREIGN KEY (email) REFERENCES Persona (email);
 ALTER TABLE Cliente ADD CONSTRAINT PK_Cliente PRIMARY KEY (email);
+ALTER TABLE Cliente ADD CONSTRAINT CH_Cliente_puntos CHECK(puntos_acumulados >= 0);
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -75,10 +85,10 @@ CREATE TABLE Sucursal(
 
 ALTER TABLE Sucursal ADD CONSTRAINT PK_Sucursal PRIMARY KEY (id_sucursal);
 ALTER TABLE Sucursal ADD CONSTRAINT FK_Sucursal_Supervisor FOREIGN KEY (supervisor) REFERENCES Empleado (RFC);
+-- ALTER TABLE Sucursal ADD CONSTRAINT ch_check_supervisor CHECK(supervisor IN (SELECT RFC_Empleado FROM Contrato WHERE Sucursal.id_sucursal = Contrato.id_sucursal));
 -- # FK de id_dirección está en Dirección.
 ---------------------------------------------------------------------------------------------
 
--- #### Restricción de que no tenga mas de 7 renglones ######
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Dias(
     id_dia INTEGER,
@@ -100,9 +110,9 @@ CREATE TABLE Horarios_Sucursales(
 ALTER TABLE Horarios_Sucursales ADD CONSTRAINT FK_H_Sucursales_Sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id_sucursal);
 ALTER TABLE Horarios_Sucursales ADD CONSTRAINT FK_H_Sucursales_Dia FOREIGN KEY (id_dia) REFERENCES Dias (id_dia);
 ALTER TABLE Horarios_Sucursales ADD CONSTRAINT PK_H_Sucursales PRIMARY KEY (id_sucursal, id_dia);
+ALTER TABLE Horarios_Sucursales ADD CONSTRAINT CH_HS_check_fechas CHECK(hora_inicio < hora_fin);
 ---------------------------------------------------------------------------------------------
 
---  # Checar si salario respeta el formato *.##
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Contrato(
     RFC_Empleado VARCHAR2(13),
@@ -115,6 +125,7 @@ CREATE TABLE Contrato(
 ALTER TABLE Contrato ADD CONSTRAINT FK_Contrato_RFC FOREIGN KEY (RFC_Empleado) REFERENCES Empleado (RFC);
 ALTER TABLE Contrato ADD CONSTRAINT FK_Contrato_Sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id_sucursal);
 ALTER TABLE Contrato ADD CONSTRAINT PK_Contrato PRIMARY KEY (RFC_Empleado);
+ALTER TABLE Contrato ADD CONSTRAINT CH_Contrato_Salario CHECK(salario > 0);
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -137,6 +148,7 @@ CREATE TABLE Ingrediente(
 
 ALTER TABLE Ingrediente ADD CONSTRAINT PK_Ingrediente PRIMARY KEY (id_ingrediente);
 ALTER TABLE Ingrediente ADD CONSTRAINT FK_Ingrediente_ID FOREIGN KEY (id_ingrediente) REFERENCES Producto (id_producto);
+ALTER TABLE Ingrediente ADD CONSTRAINT CH_Ingrediente_cantidad CHECK(cantidad > 0);
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -167,6 +179,8 @@ ALTER TABLE Suministro ADD CONSTRAINT PK_Suministro PRIMARY KEY (id_compra);
 ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id_sucursal);
 ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Proveedor FOREIGN KEY (id_proveedor) REFERENCES Proveedor (id_proveedor);
 ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Producto FOREIGN KEY (id_producto) REFERENCES Producto (id_producto);
+ALTER TABLE Suministro ADD CONSTRAINT CH_Suministro_check_Pago CHECK(pago > 0);
+ALTER TABLE Suministro ADD CONSTRAINT CH_Suministro_check_comprado CHECK(cantidad_comprada > 0);
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -183,12 +197,12 @@ ALTER TABLE Direccion ADD CONSTRAINT PK_Direccion PRIMARY KEY (id_direccion);
 ALTER TABLE Persona ADD CONSTRAINT FK_Persona_Direccion FOREIGN KEY (id_direccion) REFERENCES Direccion (id_direccion);
 ALTER TABLE Sucursal ADD CONSTRAINT FK_Sucursal_Direccion FOREIGN KEY (id_direccion) REFERENCES Direccion (id_direccion);
 ALTER TABLE Proveedor ADD CONSTRAINT FK_Proveedor_Direccion FOREIGN KEY (id_direccion) REFERENCES Direccion (id_direccion);
+
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Alimento(
     id_alimento INTEGER,
-    id_promocion INTEGER,
     nombre VARCHAR2(25) NOT NULL,
     tipo_alimento VARCHAR2(25) NOT NULL, -- Entrada, postre, etc. 
     descripcion VARCHAR2(50)            -- Light, etc.
@@ -223,12 +237,14 @@ CREATE TABLE Ingrediente_Ocupado(
 ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT FK_I_Ocupado_id_alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
 ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT FK_I_Ocupado_id_ingrediente FOREIGN KEY (id_ingrediente) REFERENCES Ingrediente (id_ingrediente);
 ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT PK_I_Ocupado PRIMARY KEY (id_alimento, id_ingrediente);
+ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT CH_IO_cant_alimento CHECK(cantidad_alimento > 0);
+ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT CH_IO_cant_ingrediente CHECK(cantidad_ingrediente > 0);
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Historia_Precios(
     id_precio INTEGER, 
-    id_alimento INTEGER,
+    id_alimento INTEGER NOT NULL,
     id_promocion INTEGER,                
     inicio_vigencia DATE NOT NULL,
     precio_porcion NUMBER(*,2) NOT NULL
@@ -264,15 +280,19 @@ ALTER TABLE Recomendaciones_Salsas ADD CONSTRAINT FK_RS_Recomendacion FOREIGN KE
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Historia_Precios_Salsas(
     id_precio INTEGER,
-    id_alimento INTEGER,
-    inicio_vigencia DATE,
+    id_alimento INTEGER NOT NULL,
+    id_promocion INTEGER,
+    inicio_vigencia DATE NOT NULL,
     precio_ml NUMBER(*,2) NOT NULL,
     precio_mediolt NUMBER(*,2) NOT NULL,
-    precio_lt NUMBER(*,2) NOT NULL
+    precio_kg NUMBER(*,2) NOT NULL
 );
 
 ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT PK_HPS PRIMARY KEY (id_precio); 
 ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT FK_HPS_id_alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
+ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT CH_HPS_precio_ml CHECK(precio_ml > 0);
+ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT CH_HPS_precio_mediolt CHECK(precio_mediolt > 0);
+ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT CH_HPS_precio_kg CHECK(precio_kg > 0);
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -283,11 +303,9 @@ CREATE TABLE Promocion(
 );
 
 ALTER TABLE Promocion ADD CONSTRAINT PK_Promocion PRIMARY KEY (id_promocion);
-
-ALTER TABLE Alimento ADD CONSTRAINT FK_Alimento_Promocion FOREIGN KEY (id_promocion) REFERENCES Promocion (id_promocion);
+ALTER TABLE Promocion ADD CONSTRAINT CH_check_fechas CHECK(inicio_vigencia < fin_vigencia);
 ---------------------------------------------------------------------------------------------
 
--- # Reestringir 0 < porcentaje <= 100.
 ---------------------------------------------------------------------------------------------
 -- Tabla que representa descuentos en porcentaje para un mismo alimento. (Es especialización de Promoción)
 CREATE TABLE Descuentos(
@@ -297,6 +315,7 @@ CREATE TABLE Descuentos(
 
 ALTER TABLE Descuentos ADD CONSTRAINT PK_Descuentos PRIMARY KEY (id_promocion);
 ALTER TABLE Descuentos ADD CONSTRAINT FK_Descuentos_ID FOREIGN KEY (id_promocion) REFERENCES Promocion (id_promocion);
+ALTER TABLE Descuentos ADD CONSTRAINT CH_check_pntje CHECK(porcentaje_descuento BETWEEN 1 AND 100);
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -310,6 +329,8 @@ CREATE TABLE Paquetes(
 ALTER TABLE Paquetes ADD CONSTRAINT PK_Paquetes PRIMARY KEY (id_promocion);
 ALTER TABLE Paquetes ADD CONSTRAINT FK_Paquetes_ID FOREIGN KEY (id_promocion) REFERENCES Promocion (id_promocion);
 ALTER TABLE Paquetes ADD CONSTRAINT FK_Paquetes_AP FOREIGN KEY (alimento_paquete) REFERENCES Alimento (id_alimento);
+ALTER TABLE Paquetes ADD CONSTRAINT CH_Paquetes_necesarios CHECK(cantidad_necesarios > 0);
+ALTER TABLE Paquetes ADD CONSTRAINT CH_Paquetes_alimentoPaq CHECK(cantidad_ap > 0);
 ---------------------------------------------------------------------------------------------
 
 -- # Restringir hora_fin > hora_inicio.
@@ -324,6 +345,7 @@ CREATE TABLE Horarios_Promociones(
 ALTER TABLE Horarios_Promociones ADD CONSTRAINT PK_H_Promociones PRIMARY KEY (id_promocion, id_dia);
 ALTER TABLE Horarios_Promociones ADD CONSTRAINT FK_H_Promociones_Promocion FOREIGN KEY (id_promocion) REFERENCES Promocion (id_promocion);
 ALTER TABLE Horarios_Promociones ADD CONSTRAINT FK_H_Promociones_Dia FOREIGN KEY (id_dia) REFERENCES Dias (id_dia);
+ALTER TABLE Horarios_Promociones ADD CONSTRAINT CH_H_Promociones_horas CHECK(hora_inicio < hora_fin);
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -372,11 +394,12 @@ CREATE TABLE Pedido(
     id_pedido INTEGER,
     id_orden INTEGER NOT NULL,
     id_alimento INTEGER NOT NULL,
-    cantidad_alimento FLOAT NOT NULL,
+    cantidad_alimento INTEGER NOT NULL,
     unidad_alimento VARCHAR2(20)            -- Solo es para salsas: MedioKG, Litro, etc.
 );
 
 ALTER TABLE Pedido ADD CONSTRAINT PK_Pedido PRIMARY KEY (id_pedido);
 ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_Orden FOREIGN KEY (id_orden) REFERENCES Orden (id);
 ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_Alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
+ALTER TABLE Pedido ADD CONSTRAINT CH_Pedido_check_cant CHECK(cantidad_alimento > 0);
 ---------------------------------------------------------------------------------------------
