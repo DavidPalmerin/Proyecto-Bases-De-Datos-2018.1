@@ -73,7 +73,7 @@ INSERT INTO Proveedor (id_proveedor,id_direccion,nombre,telefono,email) VALUES (
 INSERT INTO Proveedor (id_proveedor,id_direccion,nombre,telefono,email) VALUES (73,423,'Sweet','6366182016','eros.nec.tellus@ipsum.ca');
 INSERT INTO Proveedor (id_proveedor,id_direccion,nombre,telefono,email) VALUES (74,424,'Adams','7368204552','Nullam.vitae@Phasellus.org');
 INSERT INTO Proveedor (id_proveedor,id_direccion,nombre,telefono,email) VALUES (75,425,'Pugh','4503437593','sapien.Nunc.pulvinar@vulputate.org');
-INSERT INTO Proveedor (id_proveedor,id_direccion,nombre,telefono,email) VALUES (76,426,'Vargas','2407573557','mauris.sagittis.placerat@Suspendissetristiqueneque.ca');
+INSERT INTO Proveedor (id_proveedor,id_direccion,nombre,telefono,email) VALUES (76,426,'Vargas','2407573557','sagittis.placerat@Suspendissetristiqueneque.ca');
 INSERT INTO Proveedor (id_proveedor,id_direccion,nombre,telefono,email) VALUES (77,427,'Newton','7186365580','faucibus@eu.edu');
 INSERT INTO Proveedor (id_proveedor,id_direccion,nombre,telefono,email) VALUES (78,428,'Bailey','5325985872','Aliquam.auctor.velit@tortor.net');
 INSERT INTO Proveedor (id_proveedor,id_direccion,nombre,telefono,email) VALUES (79,429,'Day','6397264028','magna.Lorem@ornarelectusjusto.net');

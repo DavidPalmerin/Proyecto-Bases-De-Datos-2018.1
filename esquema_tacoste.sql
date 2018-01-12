@@ -13,9 +13,9 @@ ALTER TABLE Persona ADD CONSTRAINT PK_Persona PRIMARY KEY (email);
 
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Cliente(
-    email VARCHAR2(25),
+    email VARCHAR2(50),
     num_cuenta INTEGER,
-    contrasenia VARCHAR(30), 
+    contrasenia VARCHAR(80), 
     puntos_acumulados INTEGER NOT NULL
 );
 
@@ -26,7 +26,7 @@ ALTER TABLE Cliente ADD CONSTRAINT PK_Cliente PRIMARY KEY (email);
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Empleado(
     RFC VARCHAR2(13) NOT NULL,
-    email VARCHAR2(25),
+    email VARCHAR2(50),
     CURP VARCHAR2(18) NOT NULL,
     num_seg_social VARCHAR2(11) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
@@ -145,7 +145,7 @@ CREATE TABLE Proveedor(
     id_direccion INTEGER,
     nombre VARCHAR2(20) NOT NULL,
     telefono VARCHAR2(13) NOT NULL,
-    email VARCHAR2(25) NOT NULL
+    email VARCHAR2(50) NOT NULL
 );
 
 ALTER TABLE Proveedor ADD CONSTRAINT PK_Proveedor PRIMARY KEY (id_proveedor);
@@ -331,7 +331,7 @@ ALTER TABLE Horarios_Promociones ADD CONSTRAINT FK_H_Promociones_Dia FOREIGN KEY
 CREATE TABLE Orden (
     id INTEGER,
     id_sucursal INTEGER NOT NULL,
-    cliente VARCHAR(25) NOT NULL,
+    cliente VARCHAR(50) NOT NULL,
     fecha DATE NOT NULL
 );
 
