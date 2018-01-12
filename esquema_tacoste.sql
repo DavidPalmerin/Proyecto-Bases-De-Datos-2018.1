@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 -- IMPORTNTE: Se quitò id_promociòn a Alimento; ùnicamente va en historio de precios normales y de salsas. 
 -- Restricciones agregadas:
 -- Tiestamps de Horarios_Sucrusales
@@ -7,6 +8,8 @@
 -- Vigencias en promociones.
 
 -- Que telefono solo tenga numeros.
+=======
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Persona(
     email VARCHAR2(50) NOT NULL,
@@ -30,7 +33,10 @@ CREATE TABLE Cliente(
 
 ALTER TABLE Cliente ADD CONSTRAINT FK_Cliente_email FOREIGN KEY (email) REFERENCES Persona (email);
 ALTER TABLE Cliente ADD CONSTRAINT PK_Cliente PRIMARY KEY (email);
+<<<<<<< HEAD
 ALTER TABLE Cliente ADD CONSTRAINT CH_Cliente_puntos CHECK(puntos_acumulados >= 0);
+=======
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -85,10 +91,17 @@ CREATE TABLE Sucursal(
 
 ALTER TABLE Sucursal ADD CONSTRAINT PK_Sucursal PRIMARY KEY (id_sucursal);
 ALTER TABLE Sucursal ADD CONSTRAINT FK_Sucursal_Supervisor FOREIGN KEY (supervisor) REFERENCES Empleado (RFC);
+<<<<<<< HEAD
 -- ALTER TABLE Sucursal ADD CONSTRAINT ch_check_supervisor CHECK(supervisor IN (SELECT RFC_Empleado FROM Contrato WHERE Sucursal.id_sucursal = Contrato.id_sucursal));
 -- # FK de id_dirección está en Dirección.
 ---------------------------------------------------------------------------------------------
 
+=======
+-- # FK de id_dirección está en Dirección.
+---------------------------------------------------------------------------------------------
+
+-- #### Restricción de que no tenga mas de 7 renglones ######
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Dias(
     id_dia INTEGER,
@@ -110,9 +123,15 @@ CREATE TABLE Horarios_Sucursales(
 ALTER TABLE Horarios_Sucursales ADD CONSTRAINT FK_H_Sucursales_Sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id_sucursal);
 ALTER TABLE Horarios_Sucursales ADD CONSTRAINT FK_H_Sucursales_Dia FOREIGN KEY (id_dia) REFERENCES Dias (id_dia);
 ALTER TABLE Horarios_Sucursales ADD CONSTRAINT PK_H_Sucursales PRIMARY KEY (id_sucursal, id_dia);
+<<<<<<< HEAD
 ALTER TABLE Horarios_Sucursales ADD CONSTRAINT CH_HS_check_fechas CHECK(hora_inicio < hora_fin);
 ---------------------------------------------------------------------------------------------
 
+=======
+---------------------------------------------------------------------------------------------
+
+--  # Checar si salario respeta el formato *.##
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Contrato(
     RFC_Empleado VARCHAR2(13),
@@ -125,7 +144,10 @@ CREATE TABLE Contrato(
 ALTER TABLE Contrato ADD CONSTRAINT FK_Contrato_RFC FOREIGN KEY (RFC_Empleado) REFERENCES Empleado (RFC);
 ALTER TABLE Contrato ADD CONSTRAINT FK_Contrato_Sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id_sucursal);
 ALTER TABLE Contrato ADD CONSTRAINT PK_Contrato PRIMARY KEY (RFC_Empleado);
+<<<<<<< HEAD
 ALTER TABLE Contrato ADD CONSTRAINT CH_Contrato_Salario CHECK(salario > 0);
+=======
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -148,7 +170,10 @@ CREATE TABLE Ingrediente(
 
 ALTER TABLE Ingrediente ADD CONSTRAINT PK_Ingrediente PRIMARY KEY (id_ingrediente);
 ALTER TABLE Ingrediente ADD CONSTRAINT FK_Ingrediente_ID FOREIGN KEY (id_ingrediente) REFERENCES Producto (id_producto);
+<<<<<<< HEAD
 ALTER TABLE Ingrediente ADD CONSTRAINT CH_Ingrediente_cantidad CHECK(cantidad > 0);
+=======
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -179,8 +204,11 @@ ALTER TABLE Suministro ADD CONSTRAINT PK_Suministro PRIMARY KEY (id_compra);
 ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal (id_sucursal);
 ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Proveedor FOREIGN KEY (id_proveedor) REFERENCES Proveedor (id_proveedor);
 ALTER TABLE Suministro ADD CONSTRAINT FK_Suministro_Producto FOREIGN KEY (id_producto) REFERENCES Producto (id_producto);
+<<<<<<< HEAD
 ALTER TABLE Suministro ADD CONSTRAINT CH_Suministro_check_Pago CHECK(pago > 0);
 ALTER TABLE Suministro ADD CONSTRAINT CH_Suministro_check_comprado CHECK(cantidad_comprada > 0);
+=======
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -197,7 +225,10 @@ ALTER TABLE Direccion ADD CONSTRAINT PK_Direccion PRIMARY KEY (id_direccion);
 ALTER TABLE Persona ADD CONSTRAINT FK_Persona_Direccion FOREIGN KEY (id_direccion) REFERENCES Direccion (id_direccion);
 ALTER TABLE Sucursal ADD CONSTRAINT FK_Sucursal_Direccion FOREIGN KEY (id_direccion) REFERENCES Direccion (id_direccion);
 ALTER TABLE Proveedor ADD CONSTRAINT FK_Proveedor_Direccion FOREIGN KEY (id_direccion) REFERENCES Direccion (id_direccion);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -205,12 +236,22 @@ CREATE TABLE Alimento(
     id_alimento INTEGER,
     nombre VARCHAR2(25) NOT NULL,
     tipo_alimento VARCHAR2(25) NOT NULL, -- Entrada, postre, etc. 
+<<<<<<< HEAD
     descripcion VARCHAR2(50)            -- Light, etc.
+=======
+    descripcion VARCHAR2(50),             -- Light, etc.
+    precio_actual NUMBER(*,2)           -- Puede ser columna calculabe, pero se necesita para uso de triggers posteriores.
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 );
 
 ALTER TABLE Alimento ADD CONSTRAINT PK_Alimento PRIMARY KEY (id_alimento);
 ---------------------------------------------------------------------------------------------
 
+<<<<<<< HEAD
+=======
+INSERT INTO ALIMENTO(id_alimento, NOMBRE, tipo_alimento, descripcion, precio_actual) VALUES (1,'UNO','TACO','XD',NULL);
+INSERT INTO ALIMENTO(id_alimento, NOMBRE, tipo_alimento, descripcion, precio_actual) VALUES (2,'DOS','TACO','XD',NULL);
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 
 ---------------------------------------------------------------------------------------------
 -- Aquí van los alimentos que x sucursal no vende.
@@ -237,17 +278,28 @@ CREATE TABLE Ingrediente_Ocupado(
 ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT FK_I_Ocupado_id_alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
 ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT FK_I_Ocupado_id_ingrediente FOREIGN KEY (id_ingrediente) REFERENCES Ingrediente (id_ingrediente);
 ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT PK_I_Ocupado PRIMARY KEY (id_alimento, id_ingrediente);
+<<<<<<< HEAD
 ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT CH_IO_cant_alimento CHECK(cantidad_alimento > 0);
 ALTER TABLE Ingrediente_Ocupado ADD CONSTRAINT CH_IO_cant_ingrediente CHECK(cantidad_ingrediente > 0);
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
+=======
+---------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------
+-- Es para alimentos que no son salsas. La definicion de salsas está mas abajo.
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 CREATE TABLE Historia_Precios(
     id_precio INTEGER, 
     id_alimento INTEGER NOT NULL,
     id_promocion INTEGER,                
     inicio_vigencia DATE NOT NULL,
+<<<<<<< HEAD
     precio_porcion NUMBER(*,2) NOT NULL
+=======
+    precio NUMBER(*,2) NOT NULL
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 );
 
 ALTER TABLE Historia_Precios ADD CONSTRAINT PK_HP PRIMARY KEY (id_precio);
@@ -255,6 +307,12 @@ ALTER TABLE Historia_Precios ADD CONSTRAINT FK_HP FOREIGN KEY (id_alimento) REFE
 -- # FK de id_promoción está en el apartado de Promocion.
 ---------------------------------------------------------------------------------------------
 
+<<<<<<< HEAD
+=======
+INSERT INTO Historia_Precios(ID_PRECIO, id_alimento, id_promocion, inicio_vigencia, PRECIO) VALUES (1, 1, NULL, TO_DATE('28/95/1999', 'DD/MM/YYYY'), 540.20);
+INSERT INTO Historia_Precios(ID_PRECIO, id_alimento, id_promocion, inicio_vigencia, PRECIO) VALUES (1, 1, NULL, TO_DATE('28/95/1991', 'DD/MM/YYYY'), 1000.00);
+
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Salsa(
     id_alimento INTEGER,
@@ -280,6 +338,7 @@ ALTER TABLE Recomendaciones_Salsas ADD CONSTRAINT FK_RS_Recomendacion FOREIGN KE
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Historia_Precios_Salsas(
     id_precio INTEGER,
+<<<<<<< HEAD
     id_alimento INTEGER NOT NULL,
     id_promocion INTEGER,
     inicio_vigencia DATE NOT NULL,
@@ -293,6 +352,18 @@ ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT FK_HPS_id_alimento FOREIGN KE
 ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT CH_HPS_precio_ml CHECK(precio_ml > 0);
 ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT CH_HPS_precio_mediolt CHECK(precio_mediolt > 0);
 ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT CH_HPS_precio_kg CHECK(precio_kg > 0);
+=======
+    unidad_alimento VARCHAR(20),    -- Tiene que empatar el nombre con el que se pone en Pedido. MedioKG, Litro, Mililitro, etc.
+    id_alimento INTEGER NOT NULL,
+    id_promocion INTEGER,
+    inicio_vigencia DATE NOT NULL,
+    precio NUMBER(*,2)
+);
+
+ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT PK_HPS PRIMARY KEY (id_precio, unidad_alimento); 
+ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT FK_HPS_id_alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
+-- FK  de id_promoción abajo.
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -303,9 +374,18 @@ CREATE TABLE Promocion(
 );
 
 ALTER TABLE Promocion ADD CONSTRAINT PK_Promocion PRIMARY KEY (id_promocion);
+<<<<<<< HEAD
 ALTER TABLE Promocion ADD CONSTRAINT CH_check_fechas CHECK(inicio_vigencia < fin_vigencia);
 ---------------------------------------------------------------------------------------------
 
+=======
+ALTER TABLE Historia_Precios ADD CONSTRAINT PK_HP_promocion FOREIGN KEY (id_promocion) REFERENCES Promocion (id_promocion);
+ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT PK_HPS_promocion FOREIGN KEY (id_promocion) REFERENCES Promocion (id_promocion);
+
+---------------------------------------------------------------------------------------------
+
+-- # Reestringir 0 < porcentaje <= 100.
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 -- Tabla que representa descuentos en porcentaje para un mismo alimento. (Es especialización de Promoción)
 CREATE TABLE Descuentos(
@@ -315,7 +395,10 @@ CREATE TABLE Descuentos(
 
 ALTER TABLE Descuentos ADD CONSTRAINT PK_Descuentos PRIMARY KEY (id_promocion);
 ALTER TABLE Descuentos ADD CONSTRAINT FK_Descuentos_ID FOREIGN KEY (id_promocion) REFERENCES Promocion (id_promocion);
+<<<<<<< HEAD
 ALTER TABLE Descuentos ADD CONSTRAINT CH_check_pntje CHECK(porcentaje_descuento BETWEEN 1 AND 100);
+=======
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -329,8 +412,11 @@ CREATE TABLE Paquetes(
 ALTER TABLE Paquetes ADD CONSTRAINT PK_Paquetes PRIMARY KEY (id_promocion);
 ALTER TABLE Paquetes ADD CONSTRAINT FK_Paquetes_ID FOREIGN KEY (id_promocion) REFERENCES Promocion (id_promocion);
 ALTER TABLE Paquetes ADD CONSTRAINT FK_Paquetes_AP FOREIGN KEY (alimento_paquete) REFERENCES Alimento (id_alimento);
+<<<<<<< HEAD
 ALTER TABLE Paquetes ADD CONSTRAINT CH_Paquetes_necesarios CHECK(cantidad_necesarios > 0);
 ALTER TABLE Paquetes ADD CONSTRAINT CH_Paquetes_alimentoPaq CHECK(cantidad_ap > 0);
+=======
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 
 -- # Restringir hora_fin > hora_inicio.
@@ -345,7 +431,10 @@ CREATE TABLE Horarios_Promociones(
 ALTER TABLE Horarios_Promociones ADD CONSTRAINT PK_H_Promociones PRIMARY KEY (id_promocion, id_dia);
 ALTER TABLE Horarios_Promociones ADD CONSTRAINT FK_H_Promociones_Promocion FOREIGN KEY (id_promocion) REFERENCES Promocion (id_promocion);
 ALTER TABLE Horarios_Promociones ADD CONSTRAINT FK_H_Promociones_Dia FOREIGN KEY (id_dia) REFERENCES Dias (id_dia);
+<<<<<<< HEAD
 ALTER TABLE Horarios_Promociones ADD CONSTRAINT CH_H_Promociones_horas CHECK(hora_inicio < hora_fin);
+=======
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -394,12 +483,47 @@ CREATE TABLE Pedido(
     id_pedido INTEGER,
     id_orden INTEGER NOT NULL,
     id_alimento INTEGER NOT NULL,
+<<<<<<< HEAD
     cantidad_alimento INTEGER NOT NULL,
     unidad_alimento VARCHAR2(20)            -- Solo es para salsas: MedioKG, Litro, etc.
+=======
+    cantidad_alimento FLOAT NOT NULL,
+    unidad_alimento VARCHAR2(20),            -- Solo es para salsas: MedioKG, Litro, Mililitro etc. (Deben empatar los tipos con atributo de Precios de Salsas.)
+    subtotal NUMBER(*,2)
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
 );
 
 ALTER TABLE Pedido ADD CONSTRAINT PK_Pedido PRIMARY KEY (id_pedido);
 ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_Orden FOREIGN KEY (id_orden) REFERENCES Orden (id);
 ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_Alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
+<<<<<<< HEAD
 ALTER TABLE Pedido ADD CONSTRAINT CH_Pedido_check_cant CHECK(cantidad_alimento > 0);
 ---------------------------------------------------------------------------------------------
+=======
+---------------------------------------------------------------------------------------------
+
+-- desmadre que no funciona aún.
+CREATE TRIGGER SUBTOTAL
+AFTER INSERT ON PEDIDO
+REFERENCING NEW ROW AS NUEVO
+UPDATE PREDIO SET SUBTOTAL = CANTIDAD * (SELECT )
+
+CREATE TRIGGER PRECIO_ACTUAL_ALIMENTO
+AFTER INSERT ON HISTORIA_PRECIOS OR AFTER INSERT ON HISTORIA_PRECIOS_SALSAS
+REFERENCING NEW ROW AS 
+
+CREATE TRIGGER PRECIO_ACTUAL_ALIMENTO
+AFTER INSERT ON HISTORIA_PRECIOS OR AFTER INSERT ON HISTORIA_PRECIOS_SALSAS
+REFERENCING NEW ROW AS NUEVA
+UPDATE ALIMENTO SET PRECIO_ACTUAL = (SELECT PRECIO FROM (SELECT ID_ALIMENTO AS ALIMENTO, PRECIO, MAX(FECHA_INICIO) FROM HISTORIA_PRECIOS WHERE FECHA_INICIO < CURRENT_DATE GROUP BY ID_ALIMENTO)
+                                                WHERE NUEVA.ID_ALIMENTO = ALIMENTO);
+
+
+
+                                               
+INSERT INTO ALIMENTO(id_alimento, NOMBRE, tipo_alimento, descripcion, precio_actual) VALUES (1,'UNO','TACO','XD',NULL);
+INSERT INTO ALIMENTO(id_alimento, NOMBRE, tipo_alimento, descripcion, precio_actual) VALUES (2,'DOS','TACO','XD',NULL);
+INSERT INTO Historia_Precios(ID_PRECIO, id_alimento, id_promocion, inicio_vigencia, PRECIO) VALUES (1, 1, NULL, TO_DATE('28/05/1999', 'DD/MM/YYYY'), 540.20);
+INSERT INTO Historia_Precios(ID_PRECIO, id_alimento, id_promocion, inicio_vigencia, PRECIO) VALUES (3, 1, NULL, TO_DATE('28/05/2021', 'DD/MM/YYYY'), 1000.00);
+                                               
+>>>>>>> 0b8796ec567bf0e5f477ca40359b3c8d8c513aae
