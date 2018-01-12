@@ -351,7 +351,7 @@ ALTER TABLE Horarios_Promociones ADD CONSTRAINT CH_H_Promociones_horas CHECK(hor
 CREATE TABLE Orden (
     id INTEGER,
     id_sucursal INTEGER,
-    cliente VARCHAR(25),
+    cliente VARCHAR(50),
     fecha DATE NOT NULL,
     total NUMBER(*,2) NOT NULL,             -- En el poblado se mete con 0.
     total_promo NUMBER(*,2) NOT NULL        -- Se mete con 0 también.
