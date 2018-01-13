@@ -6,7 +6,6 @@
 -- Cantidad Comprada > 0 en Suministro.
 -- Vigencias en promociones.
 
--- Que telefono solo tenga numeros.
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Persona(
     email VARCHAR2(50) NOT NULL,
@@ -40,7 +39,7 @@ CREATE TABLE Empleado(
     CURP VARCHAR2(18) NOT NULL,
     num_seg_social VARCHAR2(11) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
-    tipo_sangre VARCHAR2(2) NOT NULL,
+    tipo_sangre VARCHAR2(3) NOT NULL,
     tipo_empleado VARCHAR2(20) NOT NULL
 );
 
@@ -77,7 +76,7 @@ ALTER TABLE Reparto ADD CONSTRAINT FK_Reparto_RFC FOREIGN KEY (RFC_Repartidor) R
 -- ###### Restricción de que el supervisor trabaje en tal sucursal ###########
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Sucursal(  
-    id_sucursal INTEGER,
+    id_sucursal INTEGER NOT NULL,
     supervisor VARCHAR2(13) NOT NULL,
     nombre VARCHAR2(20) NOT NULL,
     id_direccion INTEGER NOT NULL
@@ -85,8 +84,6 @@ CREATE TABLE Sucursal(
 
 ALTER TABLE Sucursal ADD CONSTRAINT PK_Sucursal PRIMARY KEY (id_sucursal);
 ALTER TABLE Sucursal ADD CONSTRAINT FK_Sucursal_Supervisor FOREIGN KEY (supervisor) REFERENCES Empleado (RFC);
--- ALTER TABLE Sucursal ADD CONSTRAINT ch_check_supervisor CHECK(supervisor IN (SELECT RFC_Empleado FROM Contrato WHERE Sucursal.id_sucursal = Contrato.id_sucursal));
--- # FK de id_dirección está en Dirección.
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -247,11 +244,12 @@ CREATE TABLE Historia_Precios(
     id_alimento INTEGER NOT NULL,
     id_promocion INTEGER,                
     inicio_vigencia DATE NOT NULL,
-    precio_porcion NUMBER(*,2) NOT NULL
+    precio NUMBER(*,2) NOT NULL
 );
 
 ALTER TABLE Historia_Precios ADD CONSTRAINT PK_HP PRIMARY KEY (id_precio);
 ALTER TABLE Historia_Precios ADD CONSTRAINT FK_HP FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
+ALTER TABLE Historia_Precios ADD CONSTRAINT CH_HP_precio CHECK(precio > 0);
 -- # FK de id_promoción está en el apartado de Promocion.
 ---------------------------------------------------------------------------------------------
 
@@ -280,19 +278,17 @@ ALTER TABLE Recomendaciones_Salsas ADD CONSTRAINT FK_RS_Recomendacion FOREIGN KE
 ---------------------------------------------------------------------------------------------
 CREATE TABLE Historia_Precios_Salsas(
     id_precio INTEGER,
+    unidad_alimento VARCHAR(20),    -- Tiene que empatar el nombre con la forma en que se han puesto: MedioKG, Litro, Mililitro, etc.
     id_alimento INTEGER NOT NULL,
     id_promocion INTEGER,
     inicio_vigencia DATE NOT NULL,
-    precio_ml NUMBER(*,2) NOT NULL,
-    precio_mediolt NUMBER(*,2) NOT NULL,
-    precio_kg NUMBER(*,2) NOT NULL
+    precio NUMBER(*,2)
 );
 
-ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT PK_HPS PRIMARY KEY (id_precio); 
+ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT PK_HPS PRIMARY KEY (id_precio, unidad_alimento); 
 ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT FK_HPS_id_alimento FOREIGN KEY (id_alimento) REFERENCES Alimento (id_alimento);
-ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT CH_HPS_precio_ml CHECK(precio_ml > 0);
-ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT CH_HPS_precio_mediolt CHECK(precio_mediolt > 0);
-ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT CH_HPS_precio_kg CHECK(precio_kg > 0);
+ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT CH_HPS_precio CHECK(precio > 0);
+-- FK  de id_promoción abajo.
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -304,6 +300,8 @@ CREATE TABLE Promocion(
 
 ALTER TABLE Promocion ADD CONSTRAINT PK_Promocion PRIMARY KEY (id_promocion);
 ALTER TABLE Promocion ADD CONSTRAINT CH_check_fechas CHECK(inicio_vigencia < fin_vigencia);
+ALTER TABLE Historia_Precios ADD CONSTRAINT PK_HP_promocion FOREIGN KEY (id_promocion) REFERENCES Promocion (id_promocion);
+ALTER TABLE Historia_Precios_Salsas ADD CONSTRAINT PK_HPS_promocion FOREIGN KEY (id_promocion) REFERENCES Promocion (id_promocion);
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
@@ -351,10 +349,12 @@ ALTER TABLE Horarios_Promociones ADD CONSTRAINT CH_H_Promociones_horas CHECK(hor
 ---------------------------------------------------------------------------------------------
 -- # falta el trigger que incremente la cantidad de puntos acumulados en la cuenta con numero de tarjeta del cliente
 CREATE TABLE Orden (
-    id INTEGER,
-    id_sucursal INTEGER NOT NULL,
-    cliente VARCHAR(50) NOT NULL,
-    fecha DATE NOT NULL
+    id_cliente INTEGER NOT NULL,
+    id_sucursal INTEGER,
+    cliente VARCHAR(50),
+    fecha DATE NOT NULL,
+    total NUMBER(*,2) NOT NULL,             -- En el poblado se mete con 0.
+    total_promo NUMBER(*,2) NOT NULL        -- Se mete con 0 también.
 );
 
 ALTER TABLE Orden ADD CONSTRAINT PK_Orden PRIMARY KEY (id);
@@ -390,13 +390,17 @@ ALTER TABLE Pagos ADD CONSTRAINT FK_Pagos_RFC FOREIGN KEY (RFC_cobrador) REFEREN
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
+-- Unidad Alimento Solo es para salsas: MedioKG, Litro, Mililitro etc. (Deben empatar los tipos con atributo de Precios de Salsas.)
+-- Importante: En el poblado, si no se usa el campo unidad_alimento se deberá poner null siempre. (Por triggers.)
+-- Y recordar que siempre se escriben de la misma forma las porciones.
 CREATE TABLE Pedido(
     id_pedido INTEGER,
     id_orden INTEGER NOT NULL,
     id_alimento INTEGER NOT NULL,
     cantidad_alimento INTEGER NOT NULL,
-    unidad_alimento VARCHAR2(20)            -- Solo es para salsas: MedioKG, Litro, etc.
-);
+    unidad_alimento VARCHAR2(20),            
+    subtotal NUMBER(*,2) NOT NULL               
+);                                              
 
 ALTER TABLE Pedido ADD CONSTRAINT PK_Pedido PRIMARY KEY (id_pedido);
 ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_Orden FOREIGN KEY (id_orden) REFERENCES Orden (id);
